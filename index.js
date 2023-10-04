@@ -14,6 +14,7 @@ app.use(morgan(function(tokens, req, res){
 }))
 const cors=require('cors')
 app.use(cors())
+app.use(express.static('build'))
 let persons=[
     {
       "id": 1,
