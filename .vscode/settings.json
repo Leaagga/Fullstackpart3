@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/fbb99d41-f636-4e0d-969c-c7a551c400ae/resourceGroups/phonebook/providers/Microsoft.Web/sites/phoneb",
+    "appService.deploySubpath": "."
+}
