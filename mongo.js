@@ -37,37 +37,3 @@ if (process.argv.length===3){
             mongoose.connection.close()
     })
 }
-
-
-
-/* const addPerson=()=>{
-    mongoose.connect(url)
-    personname=process.argv[3]
-    personnumber=process.argv[4]
-    const person=new Person({
-        name:personname,
-        number:personnumber
-    })
-    person.save().then(result=>{
-        console.log(`Added ${result.name} number ${result.number} to phonebook`)
-        mongoose.connection.close()
-    })
-
-}
-const getPerson=()=>{
-    console.log('Phonebook:')
-    Person
-        .find({})
-        .then(result=>{
-            mongoose.connect(url)
-            result.forEach(person=>{
-                console.log(`${person.name} ${person.number}`)
-            })
-            mongoose.connection.close()
-    })
-
-} */
-
-
-
-
