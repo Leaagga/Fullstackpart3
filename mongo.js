@@ -5,9 +5,6 @@ const personSchema=new mongoose.Schema({
         name:String,
         number:String})
 const Person=mongoose.model('Person',personSchema)
-
-
-
 if (process.argv.length < 3) {
   console.log('Please provide the password as an argument: node mongo.js <password>')
   process.exit(1)

@@ -24,32 +24,18 @@ app.get('/api/persons',(request,response)=>{
     })
 })
 app.get('/info',(resquest,response)=>{
-    response.send(`<div><p>Phonebook has info for ${persons.length} people</p>
+    response.send(`<div><p>Phonebook has info for ${Person.length} people</p>
     <p>${new Date()}</p></div>`)
 })
 app.get('/api/persons/:id',(request,response)=>{
-    const id=Number(request.params.id)
-    const person=persons.find(p=>p.id===id)
-    if (person){
-        response.json(person)
-    }else{
-        response.status(404).end()
-    } 
+  Person.findById(request.params.id).then(person=>
+    response.json(person))
 })
 app.delete('/api/persons/:id',(request,response)=>{
-    const id=Number(request.params.id)
     persons=persons.filter(p=>p.id!==id)
     response.status(204).end()   
 })
-const generateId=()=>{
-    const Id=persons.length>0
-    ?Math.floor(Math.random()*100)
-    :0
-    if (persons.find(p=>p.id===Id)){
-        Id=generateId()
-    }
-    return Id
-}
+
 app.post('/api/persons',(request,response)=>{
     const body=request.body
     console.log(body)
@@ -59,16 +45,14 @@ app.post('/api/persons',(request,response)=>{
     if (!body.number){
         response.status(400).json({error: 'number missing'})
     }
-    if (persons.find(p=>body.name===p.name)){
-        response.status(400).json({error: 'name must be unique'})
-    }
-    const person={
-        "id":generateId(),
+
+    const person=new Person({
         "name":body.name,
         "number":body.number
-    }
-    persons=persons.concat(person)
-    response.json(person)
+    })
+    person.save().then(savedPerson=>
+      response.json(savedPerson)
+    )
 })
 const PORT = process.env.PORT
 app.listen(PORT, () => {
