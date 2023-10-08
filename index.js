@@ -25,8 +25,11 @@ app.get('/api/persons',(request,response)=>{
     })
 })
 app.get('/info',(resquest,response)=>{
-    response.send(`<div><p>Phonebook has info for ${Person.length} people</p>
+  Person.estimatedDocumentCount().then(result=>{
+    response.send(`<div><p>Phonebook has info for ${result} people</p>
     <p>${new Date()}</p></div>`)
+    })
+
 })
 app.get('/api/persons/:id',(request,response,next)=>{
   Person.findById(request.params.id)
@@ -36,8 +39,6 @@ app.get('/api/persons/:id',(request,response,next)=>{
       response.status(404).end()
     }})
     .catch(error=>{next(error)
-/*       console.log(error)
-      response.status(400).send({error:'malformatted id'}) */
     }
     )
 })
