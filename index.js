@@ -3,6 +3,9 @@ const express = require('express')
 const morgan=require('morgan')
 const app = express()
 const Person=require('./models/person')
+const cors=require('cors')
+app.use(cors())
+app.use(express.static('build'))
 app.use(express.json())
 app.use(morgan(function(tokens, req, res){
   return [
@@ -14,9 +17,7 @@ app.use(morgan(function(tokens, req, res){
     JSON.stringify(req.body)
   ].join(' ')
 }))
-const cors=require('cors')
-app.use(cors())
-app.use(express.static('build'))
+
 app.get('/api/persons',(request,response)=>{
   Person.find({})
     .then(person=>{
@@ -27,16 +28,16 @@ app.get('/info',(resquest,response)=>{
     response.send(`<div><p>Phonebook has info for ${Person.length} people</p>
     <p>${new Date()}</p></div>`)
 })
-app.get('/api/persons/:id',(request,response)=>{
+app.get('/api/persons/:id',(request,response,next)=>{
   Person.findById(request.params.id)
     .then(person=>{if (person){
       response.json(person)
     }else{
       response.status(404).end()
     }})
-    .catch(error=>{
-      console.log(error)
-      response.status(400).send({error:'malformatted id'})
+    .catch(error=>{next(error)
+/*       console.log(error)
+      response.status(400).send({error:'malformatted id'}) */
     }
     )
 })
@@ -65,6 +66,19 @@ app.post('/api/persons',(request,response)=>{
       response.json(savedPerson)
     )
 })
+const unknownEndpiont=(request,response)=>{
+  response.status(404).end()
+}
+app.use(unknownEndpiont)
+const erorrHandler=(error,request,response,next)=>{
+  console.log(error.message)
+  if (error.name=='CastError'){
+    return response.status(400).send({error:'malformatted eror'})
+    
+  }
+  next(error)
+}
+app.use(erorrHandler)
 const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
