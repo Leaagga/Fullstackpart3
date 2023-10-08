@@ -28,12 +28,23 @@ app.get('/info',(resquest,response)=>{
     <p>${new Date()}</p></div>`)
 })
 app.get('/api/persons/:id',(request,response)=>{
-  Person.findById(request.params.id).then(person=>
-    response.json(person))
+  Person.findById(request.params.id)
+    .then(person=>{if (person){
+      response.json(person)
+    }else{
+      response.status(404).end()
+    }})
+    .catch(error=>{
+      console.log(error)
+      response.status(400).send({error:'malformatted id'})
+    }
+    )
 })
 app.delete('/api/persons/:id',(request,response)=>{
-    persons=persons.filter(p=>p.id!==id)
-    response.status(204).end()   
+  Person.findByIdAndRemove(request.params.id)
+    .then(()=>{
+      response.status(204).end()
+    })
 })
 
 app.post('/api/persons',(request,response)=>{
